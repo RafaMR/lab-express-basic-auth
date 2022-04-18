@@ -7,6 +7,15 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const serveFavicon = require('serve-favicon');
 const baseRouter = require('./routes/base');
+const deserializeUser = require('./middlewares/deserialize-user');
+const hbs = require('hbs');
+
+/////// Added by me //////////
+const User = require('./models/user');
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo');
+hbs.registerPartials(__dirname + '/views/partials');
+///////////////////////////////
 
 const app = express();
 
@@ -28,6 +37,26 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
+
+////////////// Code added by me ///////////////////////
+app.use(
+  expressSession({
+    secret: 'abcafsdfagfsafads',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 15 * 24 * 60 * 60 * 1000 // 15 days
+    },
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://localhost:27017/node-basic-authentication',
+      ttl: 60 * 60 // 60 minutes before connection is refreshed
+    })
+  })
+);
+
+app.use(deserializeUser);
+
+////////////// ------------------- //////////
 
 app.use('/', baseRouter);
 

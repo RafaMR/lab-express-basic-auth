@@ -1,0 +1,18 @@
+<h1>Edit Profile</h1>
+
+<form method='POST'>
+
+  <label for='input-name'>Edit Name</label>
+  <br />
+  <input
+    type='text'
+    id='input-name'
+    name='name'
+    placeholder='Type new name...'
+    required='required'
+    value='{{user.name}}'
+  />
+
+  <button type='submit'>Edit Name</button>
+
+</form>
