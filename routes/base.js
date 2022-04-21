@@ -31,6 +31,7 @@ router.post('/signup', (req, res, next) => {
       });
     })
     .then((user) => {
+      console.log(user);
       req.session.userId = user._id;
       res.redirect('/');
     })
